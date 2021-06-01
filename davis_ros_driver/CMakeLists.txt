@@ -10,6 +10,8 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 
 find_package(Boost REQUIRED COMPONENTS system thread)
 
+include_directories(${libcaer_INCLUDE_DIRS})
+
 # make the executable
 cs_add_executable(davis_ros_driver
   src/driver_node.cpp

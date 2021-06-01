@@ -28,6 +28,9 @@ DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_p
 	if (ns == "/") {
 		ns = "/dvs";
 	}
+    else{
+        ns += "/dvs";
+    }
 
 	event_array_pub_ = nh_.advertise<dvs_msgs::EventArray>(ns + "/events", 10);
 	camera_info_pub_ = nh_.advertise<sensor_msgs::CameraInfo>(ns + "/camera_info", 1);
