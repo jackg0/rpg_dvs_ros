@@ -10,6 +10,7 @@ DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_p
 	nh_(nh), imu_calibration_running_(false) {
 	// load parameters
 	nh_private.param<std::string>("serial_number", device_id_, "");
+	nh_private.param<std::string>("frame_id", frame_id_, "");
 	nh_private.param<bool>("master", master_, true);
 	double reset_timestamps_delay;
 	nh_private.param<double>("reset_timestamps_delay", reset_timestamps_delay, -1.0);
@@ -306,6 +307,7 @@ void DvxplorerRosDriver::readout() {
 						event_array_msg         = dvs_msgs::EventArrayPtr(new dvs_msgs::EventArray());
 						event_array_msg->height = dvxplorer_info_.dvsSizeY;
 						event_array_msg->width  = dvxplorer_info_.dvsSizeX;
+						event_array_msg->header.frame_id = frame_id_;
 					}
 
 					caerPolarityEventPacket polarity = (caerPolarityEventPacket) packetHeader;
@@ -381,7 +383,7 @@ void DvxplorerRosDriver::readout() {
 							= reset_time_ + ros::Duration().fromNSec(caerIMU6EventGetTimestamp64(event, imu) * 1000);
 
 						// frame
-						msg.header.frame_id = "base_link";
+						msg.header.frame_id = frame_id_;
 
 						// IMU calibration
 						if (imu_calibration_running_) {
