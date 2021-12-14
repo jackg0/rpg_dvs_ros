@@ -89,6 +89,7 @@ private:
 	struct caer_dvx_info dvxplorer_info_;
 	bool master_;
 	std::string device_id_;
+	std::string frame_id_;
 
 	ros::Time reset_time_;
 
