@@ -11,6 +11,7 @@ DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_p
 	// load parameters
 	nh_private.param<std::string>("serial_number", device_id_, "");
 	nh_private.param<std::string>("frame_id", frame_id_, "");
+	nh_private.param<std::string>("calibration_file", calibration_file_, "");
 	nh_private.param<bool>("master", master_, true);
 	double reset_timestamps_delay;
 	nh_private.param<double>("reset_timestamps_delay", reset_timestamps_delay, -1.0);
@@ -135,7 +136,7 @@ void DvxplorerRosDriver::caerConnect() {
 
 	// camera info handling
 	ros::NodeHandle nh_ns(ns);
-	camera_info_manager_.reset(new camera_info_manager::CameraInfoManager(nh_ns, device_id_));
+	camera_info_manager_.reset(new camera_info_manager::CameraInfoManager(nh_ns, device_id_, calibration_file_));
 
 	// initialize timestamps
 	resetTimestamps();

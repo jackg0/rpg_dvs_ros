@@ -90,6 +90,7 @@ private:
 	bool master_;
 	std::string device_id_;
 	std::string frame_id_;
+	std::string calibration_file_;
 
 	ros::Time reset_time_;
 
