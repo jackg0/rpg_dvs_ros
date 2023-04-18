@@ -30,7 +30,7 @@ DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_p
 	if (ns == "/") {
 		ns = "/dvs";
 	}
-    else{
+    else {
         ns += "/dvs";
     }
 
