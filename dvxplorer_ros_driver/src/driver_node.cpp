@@ -8,9 +8,8 @@ int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "dvxplorer_ros_driver");
 
 	ros::NodeHandle nh;
-	ros::NodeHandle nh_private("~");
 
-	dvxplorer_ros_driver::DvxplorerRosDriver *driver = new dvxplorer_ros_driver::DvxplorerRosDriver(nh, nh_private);
+	dvxplorer_ros_driver::DvxplorerRosDriver *driver = new dvxplorer_ros_driver::DvxplorerRosDriver(nh);
 
 	ros::spin();
 

@@ -33,7 +33,7 @@ namespace dvxplorer_ros_driver {
 
 class DvxplorerRosDriver {
 public:
-	DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_private);
+	explicit DvxplorerRosDriver(ros::NodeHandle &nh);
 	~DvxplorerRosDriver();
 
 	void dataStop();
@@ -47,6 +47,7 @@ private:
 	void caerConnect();
 
 	ros::NodeHandle nh_;
+	ros::NodeHandle nh_private_{"~"};
 	ros::Publisher event_array_pub_;
 	ros::Publisher camera_info_pub_;
 	ros::Publisher imu_pub_;

@@ -7,7 +7,7 @@
 namespace dvxplorer_ros_driver {
 
 void DvxplorerRosDriverNodelet::onInit() {
-	driver_ = new dvxplorer_ros_driver::DvxplorerRosDriver(getNodeHandle(), getPrivateNodeHandle());
+	driver_ = new dvxplorer_ros_driver::DvxplorerRosDriver(getNodeHandle());
 
 	NODELET_INFO_STREAM("Initialized " << getName() << " nodelet.");
 }

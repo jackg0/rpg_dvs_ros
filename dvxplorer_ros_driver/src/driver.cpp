@@ -6,33 +6,36 @@
 
 namespace dvxplorer_ros_driver {
 
-DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_private) :
+DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh) :
 	nh_(nh), imu_calibration_running_(false) {
 	// load parameters
-	nh_private.param<std::string>("serial_number", device_id_, "");
-	nh_private.param<std::string>("frame_id", frame_id_, "");
-	nh_private.param<std::string>("calibration_file", calibration_file_, "");
-	nh_private.param<bool>("master", master_, true);
+	nh_private_.param<std::string>("serial_number", device_id_, "");
+	nh_private_.param<std::string>("frame_id", frame_id_, "");
+	nh_private_.param<std::string>("calibration_file", calibration_file_, "");
+	nh_private_.param<bool>("master", master_, true);
 	double reset_timestamps_delay;
-	nh_private.param<double>("reset_timestamps_delay", reset_timestamps_delay, -1.0);
-	nh_private.param<int>("imu_calibration_sample_size", imu_calibration_sample_size_, 1000);
+	nh_private_.param<double>("reset_timestamps_delay", reset_timestamps_delay, -1.0);
+	nh_private_.param<int>("imu_calibration_sample_size", imu_calibration_sample_size_, 1000);
 
 	// initialize IMU bias
-	nh_private.param<double>("imu_bias/ax", bias.linear_acceleration.x, 0.0);
-	nh_private.param<double>("imu_bias/ay", bias.linear_acceleration.y, 0.0);
-	nh_private.param<double>("imu_bias/az", bias.linear_acceleration.z, 0.0);
-	nh_private.param<double>("imu_bias/wx", bias.angular_velocity.x, 0.0);
-	nh_private.param<double>("imu_bias/wy", bias.angular_velocity.y, 0.0);
-	nh_private.param<double>("imu_bias/wz", bias.angular_velocity.z, 0.0);
+	nh_private_.param<double>("imu_bias/ax", bias.linear_acceleration.x, 0.0);
+	nh_private_.param<double>("imu_bias/ay", bias.linear_acceleration.y, 0.0);
+	nh_private_.param<double>("imu_bias/az", bias.linear_acceleration.z, 0.0);
+	nh_private_.param<double>("imu_bias/wx", bias.angular_velocity.x, 0.0);
+	nh_private_.param<double>("imu_bias/wy", bias.angular_velocity.y, 0.0);
+	nh_private_.param<double>("imu_bias/wz", bias.angular_velocity.z, 0.0);
+
+	ROS_INFO("frame_id: %s", frame_id_.c_str());
+	ROS_INFO("calibration_file: %s", calibration_file_.c_str());
 
 	// set namespace
 	ns = ros::this_node::getNamespace();
 	if (ns == "/") {
 		ns = "/dvs";
 	}
-    	else {
-        	ns += "/dvs";
-    	}
+	else {
+		ns += "/dvs";
+	}
 
 	event_array_pub_ = nh_.advertise<dvs_msgs::EventArray>(ns + "/events", 10);
 	camera_info_pub_ = nh_.advertise<sensor_msgs::CameraInfo>(ns + "/camera_info", 1);
@@ -53,7 +56,7 @@ DvxplorerRosDriver::DvxplorerRosDriver(ros::NodeHandle &nh, ros::NodeHandle nh_p
 	// Dynamic reconfigure
 	// Will call callback, which will pass stored config to device.
 	dynamic_reconfigure_callback_ = boost::bind(&DvxplorerRosDriver::callback, this, _1, _2);
-	server_.reset(new dynamic_reconfigure::Server<dvxplorer_ros_driver::DVXplorer_ROS_DriverConfig>(nh_private));
+	server_.reset(new dynamic_reconfigure::Server<dvxplorer_ros_driver::DVXplorer_ROS_DriverConfig>(nh_private_));
 	server_->setCallback(dynamic_reconfigure_callback_);
 
 	imu_calibration_sub_
